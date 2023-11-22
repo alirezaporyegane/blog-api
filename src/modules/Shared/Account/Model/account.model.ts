@@ -1,7 +1,10 @@
+import config from 'config'
+import Jwt from 'jsonwebtoken'
 import mongoose, { Schema } from 'mongoose'
+import { AccountModel, IAccount, IAccountMethods, IData, Role } from '../Entity/account.entity'
 
 // Account Scheme
-const accountSchema = new Schema(
+const accountSchema = new Schema<IAccount, AccountModel, IAccountMethods>(
   {
     firstName: {
       type: String
@@ -29,8 +32,8 @@ const accountSchema = new Schema(
     role: [
       {
         type: String,
-        enum: ['writer', 'admin', 'user'],
-        default: 'user'
+        enum: Role,
+        default: 'USER'
       }
     ],
     image: {
@@ -60,9 +63,47 @@ const accountSchema = new Schema(
     },
     nationalId: {
       type: String
+    },
+    suspended: {
+      type: Boolean,
+      default: false
     }
   },
   { versionKey: false }
 )
+
+accountSchema.methods.generateToken = function () {
+  const data: IData = {
+    _id: this._id,
+    phoneNumber: this.phoneNumber,
+    email: this.email,
+    userName: this.userName,
+    firstName: this.firstName,
+    lastName: this.lastName,
+    role: this.role,
+    confirmEmail: this.confirmEmail,
+    confirmPhoneNumber: this.confirmPhoneNumber,
+    uniqueId: this.uniqueId
+  }
+
+  return Jwt.sign(data, config.get('SECRET_KEY'), { algorithm: 'none', expiresIn: 60 * 60 * 48 })
+}
+
+accountSchema.methods.generateRefreshToken = function () {
+  const data: IData = {
+    _id: this._id,
+    phoneNumber: this.phoneNumber,
+    email: this.email,
+    userName: this.userName,
+    firstName: this.firstName,
+    lastName: this.lastName,
+    role: this.role,
+    confirmEmail: this.confirmEmail,
+    confirmPhoneNumber: this.confirmPhoneNumber,
+    uniqueId: this.uniqueId
+  }
+
+  return Jwt.sign(data, config.get('SECRET_KEY'), { algorithm: 'none', expiresIn: 60 * 60 * 128 })
+}
 
 export default mongoose.model('Account', accountSchema)
