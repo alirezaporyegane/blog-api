@@ -95,11 +95,7 @@ export const register = async (req: Request, res: Response) => {
  */
 export const login = async (req: Request, res: Response) => {
   try {
-    const body: IAccountLoginEntity = pick(req.body, [
-      'phoneNumber',
-      'password',
-      'uniqueId'
-    ])
+    const body: IAccountLoginEntity = pick(req.body, ['phoneNumber', 'password', 'uniqueId'])
 
     const { error } = loginValidator(body)
     if (error) return errorStatus400(res, error)
@@ -150,6 +146,45 @@ export const login = async (req: Request, res: Response) => {
     }
 
     res.status(200).json(accountDto)
+  } catch (err) {
+    errorStatus500(res, err)
+  }
+}
+
+/**
+ * LOGOUT
+ * @method (POST) /api/shared/account/logout
+ */
+export const logout = async (req: Request, res: Response) => {
+  try {
+    // await SessionsModel.deleteOne({ uniqueId: req.user.uniqueId })
+
+    res.status(200).json('success')
+  } catch (err) {
+    errorStatus500(res, err)
+  }
+}
+
+/**
+ * REFRESH TOKEN
+ * @method (POST) /api/shared/account/refresh-token
+ */
+export const refreshToken = async (req: Request, res: Response) => {
+  try {
+    const account = await accountModel.findById(req.user._id)
+
+    if (!account)
+      return errorStatus401(res, {
+        data: statusCodes.account.USER_NOT_FOUND.text,
+        statusCode: statusCodes.account.USER_NOT_FOUND.code
+      })
+
+    const response = {
+      token: account.generateRefreshToken(),
+      ttl: 60 * 60 * 128
+    }
+
+    res.status(200).json(response)
   } catch (err) {
     errorStatus500(res, err)
   }
