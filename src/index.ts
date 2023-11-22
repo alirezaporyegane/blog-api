@@ -1,24 +1,44 @@
+import bodyParser from 'body-parser'
 import express, { Application, NextFunction, Request, Response } from 'express'
 import mongoose from 'mongoose'
+import morgan from 'morgan'
+import path from 'path'
 import modules from './modules'
 
 const app: Application = express()
+
+type TGlobal = typeof globalThis & {
+  root: string
+  $errorStatus400: (res: Response, err: any) => void
+  $errorStatus401: (res: Response, err: any) => void
+  $errorStatus409: (res: Response, err: any) => void
+  $errorStatus417: (res: Response, err: any) => void
+  $errorStatus500: (res: Response, err: any) => void
+  $errorStatusObjectId: (res: Response) => void
+}
+
+let globalRoot: TGlobal
 
 export class App {
   constructor() {
     this.setupMiddleware()
     this.setupRoutes()
     this.setupDb()
+    this.setupError()
     this.setupApplication()
   }
 
   async setupDb() {
     try {
-      await mongoose.connect('mongodb://127.0.0.1:27017/rest-api')
+      await mongoose.connect('mongodb://127.0.0.1:27017/blog')
       console.log('Database is connected')
     } catch (err) {
       console.log('Db error')
     }
+  }
+
+  setupAppRoot() {
+    globalRoot.root = path.resolve(__dirname)
   }
 
   setupMiddleware() {
@@ -34,6 +54,16 @@ export class App {
     })
 
     app.use(express.static('public'))
+    app.use(bodyParser.urlencoded({ extended: true }))
+    app.use(bodyParser.json())
+    if (process.env.NODE_ENV === 'development') {
+      app.use(morgan('dev'))
+    }
+  }
+
+  setupError() {
+    process.on('rejectionHandled', (err) => console.log(err))
+    process.on('uncaughtException', (err) => console.log(err))
   }
 
   setupRoutes() {
