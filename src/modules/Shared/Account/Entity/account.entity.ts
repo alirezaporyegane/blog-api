@@ -46,6 +46,7 @@ export type IData = Pick<
   | 'confirmEmail'
   | 'confirmPhoneNumber'
   | 'uniqueId'
+  | 'suspended'
 >
 
 export type IAccountRegister = Pick<

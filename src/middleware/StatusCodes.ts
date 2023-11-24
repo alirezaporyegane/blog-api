@@ -1,20 +1,44 @@
 export default {
   account: {
     USER_WITH_THIS_PHONE_NUMBER_ALREADY_EXIST: {
-      text: 'USER_WITH_THIS_PHONE_NUMBER_ALREADY_EXIST',
-      code: 4000
+      data: 'USER_WITH_THIS_PHONE_NUMBER_ALREADY_EXIST',
+      statusCode: 4000
     },
     USER_NOT_FOUND: {
-      text: 'USER_NOT_FOUND',
-      code: 4010
+      data: 'USER_NOT_FOUND',
+      statusCode: 4010
     },
     USER_IS_SUSPENDED: {
-      text: 'USER_IS_SUSPENDED',
-      code: 4020
+      data: 'USER_IS_SUSPENDED',
+      statusCode: 4020
     },
     PASSWORD_IS_WRONG: {
-      text: 'PASSWORD_IS_WRONG',
-      code: 4030
+      data: 'PASSWORD_IS_WRONG',
+      statusCode: 4030
+    },
+    TOKEN_IS_NOT_VALID: {
+      data: 'TOKEN_IS_NOT_VALID',
+      statusCode: 4040
+    },
+    TOKEN_IS_REQUIRED: {
+      data: 'TOKEN_IS_REQUIRED',
+      statusCode: 4050
+    },
+    USER_NOT_FOUNT: {
+      data: 'USER_NOT_FOUNT',
+      statusCode: 4060
+    },
+    YOUR_PHONE_NUMBER_IS_NOT_CONFIRM: {
+      data: 'YOUR_PHONE_NUMBER_IS_NOT_CONFIRM',
+      statusCode: 4070
+    },
+    TOKEN_IS_EXPIRED: {
+      data: 'TOKEN_IS_EXPIRED',
+      statusCode: 4080
+    },
+    USER_NOT_HAVE_CURRENT_ROLE: {
+      data: 'USER_NOT_HAVE_CURRENT_ROLE',
+      statusCode: 4090
     }
   }
 }

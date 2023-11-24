@@ -14,4 +14,9 @@ export interface IAccountRegisterDto {
   refreshTtl: number
 }
 
-export type IAccountLoginDto = IAccountRegisterDto
+export interface IAccountLoginDto extends IAccountRegisterDto {}
+
+export interface IAccountRefreshTokenDto {
+  token: string
+  ttl: number
+}

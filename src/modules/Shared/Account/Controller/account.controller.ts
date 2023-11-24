@@ -8,10 +8,11 @@ import {
   errorStatus500
 } from '../../../../middleware/ErrorMessage'
 import statusCodes from '../../../../middleware/StatusCodes'
-import { IAccountLoginDto, IAccountRegisterDto } from '../Dto/account.dto'
+import { IAccountLoginDto, IAccountRefreshTokenDto, IAccountRegisterDto } from '../Dto/account.dto'
 import { IAccountLoginEntity, IAccountRegister } from '../Entity/account.entity'
 import accountModel from '../Model/account.model'
 import { loginValidator, registerValidator } from '../Validator/account.validator'
+import { UserRequest } from '../../../../middleware/Auth'
 
 /**
  * ACCOUNT CONTROLLER
@@ -43,8 +44,7 @@ export const register = async (req: Request, res: Response) => {
 
     if (isAccountExist)
       return errorStatus409(res, {
-        data: statusCodes.account.USER_WITH_THIS_PHONE_NUMBER_ALREADY_EXIST.text,
-        statusCode: statusCodes.account.USER_WITH_THIS_PHONE_NUMBER_ALREADY_EXIST.code
+        ...statusCodes.account.USER_WITH_THIS_PHONE_NUMBER_ALREADY_EXIST
       })
 
     const hashPassword = await hash(body.password, 12)
@@ -106,21 +106,18 @@ export const login = async (req: Request, res: Response) => {
 
     if (!account)
       return errorStatus401(res, {
-        data: statusCodes.account.USER_NOT_FOUND.text,
-        statusCode: statusCodes.account.USER_NOT_FOUND.code
+        ...statusCodes.account.USER_NOT_FOUND
       })
 
     if (account.suspended)
       return errorStatus401(res, {
-        data: statusCodes.account.USER_IS_SUSPENDED.text,
-        statusCode: statusCodes.account.USER_IS_SUSPENDED.code
+        ...statusCodes.account.USER_IS_SUSPENDED
       })
 
     const match = await compare(body.password, account.password)
     if (!match)
       return errorStatus401(res, {
-        data: statusCodes.account.PASSWORD_IS_WRONG.text,
-        statusCode: statusCodes.account.PASSWORD_IS_WRONG.code
+        ...statusCodes.account.PASSWORD_IS_WRONG
       })
 
     account.uniqueId = body.uniqueId
@@ -169,17 +166,16 @@ export const logout = async (req: Request, res: Response) => {
  * REFRESH TOKEN
  * @method (POST) /api/shared/account/refresh-token
  */
-export const refreshToken = async (req: Request, res: Response) => {
+export const refreshToken = async (req: UserRequest, res: Response) => {
   try {
-    const account = await accountModel.findById(req.user._id)
+    const account = await accountModel.findById(req!.user._id)
 
     if (!account)
       return errorStatus401(res, {
-        data: statusCodes.account.USER_NOT_FOUND.text,
-        statusCode: statusCodes.account.USER_NOT_FOUND.code
+        ...statusCodes.account.USER_NOT_FOUND
       })
 
-    const response = {
+    const response: IAccountRefreshTokenDto = {
       token: account.generateRefreshToken(),
       ttl: 60 * 60 * 128
     }

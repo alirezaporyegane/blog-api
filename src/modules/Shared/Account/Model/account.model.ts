@@ -83,7 +83,8 @@ accountSchema.methods.generateToken = function () {
     role: this.role,
     confirmEmail: this.confirmEmail,
     confirmPhoneNumber: this.confirmPhoneNumber,
-    uniqueId: this.uniqueId
+    uniqueId: this.uniqueId,
+    suspended: this.suspended
   }
 
   return Jwt.sign(data, config.get('SECRET_KEY'), { algorithm: 'none', expiresIn: 60 * 60 * 48 })
@@ -100,7 +101,8 @@ accountSchema.methods.generateRefreshToken = function () {
     role: this.role,
     confirmEmail: this.confirmEmail,
     confirmPhoneNumber: this.confirmPhoneNumber,
-    uniqueId: this.uniqueId
+    uniqueId: this.uniqueId,
+    suspended: this.suspended
   }
 
   return Jwt.sign(data, config.get('SECRET_KEY'), { algorithm: 'none', expiresIn: 60 * 60 * 128 })

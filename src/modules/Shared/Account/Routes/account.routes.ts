@@ -1,12 +1,7 @@
-import { Request, Response, Router } from 'express'
-import { login, register } from '../Controller/account.controller'
+import { Router } from 'express'
+import { login, logout, register } from '../Controller/account.controller'
+import { authorization } from '../../../../middleware/Auth'
 const router = Router()
-
-router.get('/', (req: Request, res: Response) => {
-  res.status(200).json({
-    message: 'hello world'
-  })
-})
 
 /**
  * REGISTER
@@ -19,5 +14,11 @@ router.post('/register', register)
  * @method (POST) /api/shared/account/login
  */
 router.post('/login', login)
+
+/**
+ * LOGOUT
+ * @method (POST) /api/shared/account/logout
+ */
+router.post('/login', authorization, logout)
 
 export default router
