@@ -8,11 +8,19 @@ import {
   errorStatus500
 } from '../../../../middleware/ErrorMessage'
 import statusCodes from '../../../../middleware/StatusCodes'
-import { IAccountLoginDto, IAccountRefreshTokenDto, IAccountRegisterDto } from '../Dto/account.dto'
-import { IAccountLoginEntity, IAccountRegister } from '../Entity/account.entity'
+import {
+  IAccountLoginDto,
+  IAccountProfile,
+  IAccountRefreshTokenDto,
+  IAccountRegisterDto
+} from '../Dto/account.dto'
+import { IAccountLoginEntity, IAccountRegister, Role, Status } from '../Entity/account.entity'
 import accountModel from '../Model/account.model'
-import { loginValidator, registerValidator } from '../Validator/account.validator'
-import { UserRequest } from '../../../../middleware/Auth'
+import {
+  loginValidator,
+  registerValidator,
+  updateProfileValidator
+} from '../Validator/account.validator'
 
 /**
  * ACCOUNT CONTROLLER
@@ -59,7 +67,9 @@ export const register = async (req: Request, res: Response) => {
         'email',
         'uniqueId'
       ]),
-      password: hashPassword
+      password: hashPassword,
+      role: Role.USER,
+      status: Status.NOT_ACTIVE
     }
 
     const newAccount = await accountModel.create(newAccountBody)
@@ -166,7 +176,7 @@ export const logout = async (req: Request, res: Response) => {
  * REFRESH TOKEN
  * @method (POST) /api/shared/account/refresh-token
  */
-export const refreshToken = async (req: UserRequest, res: Response) => {
+export const refreshToken = async (req: Request, res: Response) => {
   try {
     const account = await accountModel.findById(req!.user._id)
 
@@ -181,6 +191,73 @@ export const refreshToken = async (req: UserRequest, res: Response) => {
     }
 
     res.status(200).json(response)
+  } catch (err) {
+    errorStatus500(res, err)
+  }
+}
+
+/**
+ * GET USER
+ * @method (GET) /api/shared/account/my
+ */
+export const getUserProfile = async (req: Request, res: Response) => {
+  try {
+    const account = await accountModel.findById(req!.user._id)
+
+    if (!account)
+      return errorStatus401(res, {
+        ...statusCodes.account.USER_NOT_FOUND
+      })
+
+    const response: IAccountProfile = pick(account, [
+      '_id',
+      'firstName',
+      'lastName',
+      'email',
+      'phoneNumber',
+      'legality',
+      'image',
+      'confirmEmail',
+      'confirmPhoneNumber',
+      'confirmedProfile',
+      'birthDate',
+      'job',
+      'nationalId'
+    ])
+
+    res.status(200).json(response)
+  } catch (err) {
+    errorStatus500(res, err)
+  }
+}
+
+/**
+ * UPDATE USER
+ * @method (PUT) /api/shared/account/my
+ */
+export const updateUserProfile = async (req: Request, res: Response) => {
+  try {
+    const body: IAccountProfile = pick(req.body, [
+      'firstName',
+      'lastName',
+      'email',
+      'phoneNumber',
+      'legality',
+      'image',
+      'confirmEmail',
+      'confirmPhoneNumber',
+      'confirmedProfile',
+      'birthDate',
+      'job',
+      'nationalId'
+    ])
+
+    const { error } = updateProfileValidator(body)
+    if (error) return errorStatus400(res, error)
+
+    await accountModel.findByIdAndUpdate(req.user._id, body)
+
+    res.status(200).json(body)
   } catch (err) {
     errorStatus500(res, err)
   }

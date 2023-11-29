@@ -6,6 +6,6 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true                         /* Skip type checking all .d.ts files. */
+    "forceConsistentCasingInFileNames": true
   }
 }

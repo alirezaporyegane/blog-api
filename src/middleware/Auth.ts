@@ -1,16 +1,12 @@
-import jwt from 'jsonwebtoken'
 import config from 'config'
 import { NextFunction, Request, Response } from 'express'
-import { errorStatus401, errorStatus500 } from './ErrorMessage'
-import statusCodes from './StatusCodes'
+import jwt from 'jsonwebtoken'
 import { IData } from '../modules/Shared/Account/Entity/account.entity'
 import accountModel from '../modules/Shared/Account/Model/account.model'
+import { errorStatus401, errorStatus500 } from './ErrorMessage'
+import statusCodes from './StatusCodes'
 
-export interface UserRequest extends Request {
-  user: IData
-}
-
-export const authorization = async (req: UserRequest, res: Response, next: NextFunction) => {
+export const authorization = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = req.header('Authorization')?.slice(7)
     const bearer = req.header('Authorization')?.slice(0, 6)
@@ -32,12 +28,13 @@ export const authorization = async (req: UserRequest, res: Response, next: NextF
 
     next()
   } catch (err) {
+    console.log(err)
     errorStatus401(res, { ...statusCodes.account.TOKEN_IS_EXPIRED })
   }
 }
 
 export const roleChecker = (roles: string[]) => {
-  return async (req: UserRequest, res: Response, next: NextFunction) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
     try {
       if (typeof roles === 'string') roles = [roles]
       const hasRole = req.user.role && !!req.user.role.find((o: string) => roles.includes(o))
