@@ -1,7 +1,14 @@
 import config from 'config'
 import Jwt from 'jsonwebtoken'
 import mongoose, { Schema } from 'mongoose'
-import { AccountModel, IAccount, IAccountMethods, IData, Role } from '../Entity/account.entity'
+import {
+  AccountModel,
+  IAccount,
+  IAccountMethods,
+  IData,
+  Role,
+  Status
+} from '../Entity/account.entity'
 
 // Account Scheme
 const accountSchema = new Schema<IAccount, AccountModel, IAccountMethods>(
@@ -67,6 +74,11 @@ const accountSchema = new Schema<IAccount, AccountModel, IAccountMethods>(
     suspended: {
       type: Boolean,
       default: false
+    },
+    status: {
+      type: String,
+      enum: Status,
+      default: Status.NOT_ACTIVE
     }
   },
   { versionKey: false }
@@ -83,10 +95,11 @@ accountSchema.methods.generateToken = function () {
     role: this.role,
     confirmEmail: this.confirmEmail,
     confirmPhoneNumber: this.confirmPhoneNumber,
-    uniqueId: this.uniqueId
+    uniqueId: this.uniqueId,
+    suspended: this.suspended
   }
 
-  return Jwt.sign(data, config.get('SECRET_KEY'), { algorithm: 'none', expiresIn: 60 * 60 * 48 })
+  return Jwt.sign(data, config.get('SECRET_KEY'))
 }
 
 accountSchema.methods.generateRefreshToken = function () {
@@ -100,10 +113,11 @@ accountSchema.methods.generateRefreshToken = function () {
     role: this.role,
     confirmEmail: this.confirmEmail,
     confirmPhoneNumber: this.confirmPhoneNumber,
-    uniqueId: this.uniqueId
+    uniqueId: this.uniqueId,
+    suspended: this.suspended
   }
 
-  return Jwt.sign(data, config.get('SECRET_KEY'), { algorithm: 'none', expiresIn: 60 * 60 * 128 })
+  return Jwt.sign(data, config.get('SECRET_KEY'))
 }
 
 export default mongoose.model('Account', accountSchema)

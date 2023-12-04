@@ -4,6 +4,7 @@ import mongoose from 'mongoose'
 import morgan from 'morgan'
 import path from 'path'
 import modules from './modules'
+import './types/global'
 
 const app: Application = express()
 

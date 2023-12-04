@@ -6,6 +6,12 @@ export enum Role {
   USER = 'USER'
 }
 
+export enum Status {
+  ACTIVE = 'ACTIVE',
+  BANNED = 'BANNED',
+  NOT_ACTIVE = 'NOT_ACTIVE'
+}
+
 export interface IAccount {
   _id: string
   firstName: string
@@ -25,6 +31,7 @@ export interface IAccount {
   job: string
   nationalId: string
   suspended: boolean
+  status: Status.ACTIVE | Status.BANNED | Status.NOT_ACTIVE
 }
 
 export interface IAccountMethods {
@@ -46,6 +53,7 @@ export type IData = Pick<
   | 'confirmEmail'
   | 'confirmPhoneNumber'
   | 'uniqueId'
+  | 'suspended'
 >
 
 export type IAccountRegister = Pick<

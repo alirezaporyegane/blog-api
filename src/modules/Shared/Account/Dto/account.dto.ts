@@ -1,4 +1,4 @@
-import { Role } from '../Entity/account.entity'
+import { IAccount, Role } from '../Entity/account.entity'
 
 export interface IAccountRegisterDto {
   _id: string
@@ -14,4 +14,14 @@ export interface IAccountRegisterDto {
   refreshTtl: number
 }
 
-export type IAccountLoginDto = IAccountRegisterDto
+export interface IAccountLoginDto extends IAccountRegisterDto {}
+
+export interface IAccountRefreshTokenDto {
+  token: string
+  ttl: number
+}
+
+export type IAccountProfile = Omit<
+  IAccount,
+  'password' | 'role' | 'suspended' | 'uniqueId' | 'userName' | 'status' | '_id'
+>

@@ -1,5 +1,6 @@
 import joi from 'joi'
 import { IAccountLoginEntity, IAccountRegister } from '../Entity/account.entity'
+import { IAccountProfile } from '../Dto/account.dto'
 
 export const registerValidator = (data: IAccountRegister) => {
   const schema = joi.object({
@@ -16,11 +17,32 @@ export const registerValidator = (data: IAccountRegister) => {
   return schema.validate(data)
 }
 
+
 export const loginValidator = (data: IAccountLoginEntity) => {
   const schema = joi.object({
     phoneNumber: joi.string().required(),
     password: joi.string().min(6).max(50).required(),
     uniqueId: joi.string().required()
+  })
+
+  return schema.validate(data)
+}
+
+
+export const updateProfileValidator = (data: IAccountProfile) => {
+  const schema = joi.object({
+    phoneNumber: joi.string().required(),
+    firstName: joi.string().allow(null).allow(''),
+    lastName: joi.string().allow(null).allow(''),
+    legality: joi.number().integer().valid(0).valid(1).allow(null).allow(''),
+    image: joi.string().allow(null).allow(''),
+    confirmEmail: joi.boolean(),
+    confirmPhoneNumber: joi.boolean(),
+    confirmedProfile: joi.boolean(),
+    email: joi.string().required(),
+    birthDate: joi.allow(null).allow(''),
+    job: joi.allow(null).allow(''),
+    nationalId: joi.allow(null).allow(''),
   })
 
   return schema.validate(data)
