@@ -6,6 +6,6 @@ const router = Router()
 import StatusRoute from './Router/status.router'
 
 // Shared Status
-router.use('/shared/server-status', StatusRoute)
+router.use('/server-status', StatusRoute)
 
 export default router
