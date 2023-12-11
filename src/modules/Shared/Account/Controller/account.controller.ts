@@ -222,7 +222,8 @@ export const getUserProfile = async (req: Request, res: Response) => {
       'confirmedProfile',
       'birthDate',
       'job',
-      'nationalId'
+      'nationalId',
+      'gender'
     ])
 
     res.status(200).json(response)
@@ -249,7 +250,8 @@ export const updateUserProfile = async (req: Request, res: Response) => {
       'confirmedProfile',
       'birthDate',
       'job',
-      'nationalId'
+      'nationalId',
+      'gender',
     ])
 
     const { error } = updateProfileValidator(body)
