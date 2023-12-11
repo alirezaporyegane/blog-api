@@ -3,6 +3,7 @@ import Jwt from 'jsonwebtoken'
 import mongoose, { Schema } from 'mongoose'
 import {
   AccountModel,
+  Gender,
   IAccount,
   IAccountMethods,
   IData,
@@ -78,6 +79,10 @@ const accountSchema = new Schema<IAccount, AccountModel, IAccountMethods>(
       type: String,
       enum: Status,
       default: Status.NOT_ACTIVE
+    },
+    gender: {
+      type: String,
+      enum: Gender
     }
   },
   { versionKey: false }

@@ -12,6 +12,11 @@ export enum Status {
   NOT_ACTIVE = 'NOT_ACTIVE'
 }
 
+export enum Gender {
+  MALE = 'MALE',
+  FEMALE = 'FEMALE'
+}
+
 export interface IAccount {
   _id: string
   firstName: string
@@ -30,6 +35,7 @@ export interface IAccount {
   uniqueId: string
   job: string
   nationalId: string
+  gender: Gender.MALE | Gender.FEMALE
   suspended: boolean
   status: Status.ACTIVE | Status.BANNED | Status.NOT_ACTIVE
 }
