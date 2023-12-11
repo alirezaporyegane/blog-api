@@ -4,10 +4,13 @@ import { pick } from 'lodash'
 import { isValidObjectId } from 'mongoose'
 import {
   errorStatus400,
+  errorStatus409,
   errorStatus500,
   errorStatusObjectId
 } from '../../../middleware/ErrorMessage'
+import StatusCodes from '../../../middleware/StatusCodes'
 import { QueryBuilder } from '../../../utils/queryBuilder'
+import { Role } from '../../Shared/Account/Entity/account.entity'
 import AccountModel from '../../Shared/Account/Model/account.model'
 import {
   CreateDtoIn,
@@ -15,10 +18,11 @@ import {
   Filters,
   GetAllDtoIn,
   GetAllDtoOut,
-  GetByIdDtoOut
+  GetByIdDtoOut,
+  UpdateDtoIn,
+  UpdateDtoOut
 } from '../Dto'
 import { userValidator } from '../Validator/users.validator'
-import { Role } from '../../Shared/Account/Entity/account.entity'
 
 /**
  * GET ALL MODEL
@@ -42,6 +46,7 @@ export const getAll = async (
     queryBuilder.boolean('phoneNumberConfirmed', req.query.phoneNumberConfirmed)
     queryBuilder.boolean('confirmedProfile', req.query.confirmedProfile)
     queryBuilder.boolean('suspended', req.query.suspended)
+    console.log(queryBuilder.getFilters);
     const Account = AccountModel.find<GetAllDtoOut>(queryBuilder.getFilters).select([
       '_id',
       'userName',
@@ -163,6 +168,11 @@ export const create = async (
     const { error } = userValidator(body)
     if (error) return errorStatus400(res, error)
 
+    const isUserExist = await AccountModel.findOne({
+      phoneNumber: body.phoneNumber
+    })
+    if (!!isUserExist) return errorStatus409(res, StatusCodes.account.USER_EXIST)
+
     body.password = await hash(req.body.password, 12)
     body.role = [Role.USER]
     const { confirmPassword, ...rest } = body
@@ -184,6 +194,87 @@ export const create = async (
     ])
 
     res.status(200).json(response)
+  } catch (err) {
+    errorStatus500(res, err)
+  }
+}
+
+/**
+ * UPDATE MODEL BY ID
+ * @method (PUT) /api/admin/users/:id
+ */
+export const update = async (
+  req: Request<{ id: string }, UpdateDtoIn>,
+  res: Response<Partial<UpdateDtoOut>>
+) => {
+  try {
+    const id = req.params.id
+    if (!isValidObjectId(id)) return errorStatusObjectId(res)
+
+    const body = pick<UpdateDtoIn>(req.body, [
+      'userName',
+      'firstName',
+      'lastName',
+      'email',
+      'phoneNumber',
+      'emailConfirmed',
+      'confirmedProfile',
+      'password',
+      'confirmPassword',
+      'phoneNumberConfirmed',
+      'birthDate',
+      'job',
+      'nationalId',
+      'suspended'
+    ])
+
+    const { error } = userValidator(body)
+    if (error) return errorStatus400(res, error)
+
+    const isUserExist = await AccountModel.findOne({
+      phoneNumber: body.phoneNumber,
+      _id: { $ne: id }
+    })
+    if (!!isUserExist) return errorStatus409(res, StatusCodes.account.USER_EXIST)
+
+    body.password = await hash(req.body.password, 12)
+    body.role = [Role.USER]
+    const { confirmPassword, ...rest } = body
+
+    await AccountModel.findByIdAndUpdate<Partial<UpdateDtoIn>>(id, rest)
+    const response = pick(body, [
+      'userName',
+      'firstName',
+      'lastName',
+      'email',
+      'phoneNumber',
+      'emailConfirmed',
+      'confirmedProfile',
+      'phoneNumberConfirmed',
+      'birthDate',
+      'job',
+      'nationalId',
+      'suspended'
+    ])
+
+    res.status(200).json(response)
+  } catch (err) {
+    errorStatus500(res, err)
+  }
+}
+
+/**
+ * DELETE MODEL BY ID
+ * @method (DELETE) /api/admin/users/:id
+ */
+export const remove = async (req: Request<{ id: string }>, res: Response<string>) => {
+  try {
+    const id = req.params.id
+    if (!isValidObjectId(id)) return errorStatusObjectId(res)
+
+    await AccountModel.deleteOne({ _id: id })
+
+    res.status(200).json('success')
   } catch (err) {
     errorStatus500(res, err)
   }

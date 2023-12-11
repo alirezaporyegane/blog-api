@@ -20,7 +20,7 @@ export class QueryBuilder {
   }
 
   boolean(type: keyof typeof this.filter, query: any) {
-    if (type && query) this.filter[type] = Boolean(query)
+    if (type && query) this.filter[type] = query
   }
 
   objectId(type: keyof typeof this.filter, query: any) {

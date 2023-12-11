@@ -4,6 +4,10 @@ export default {
       data: 'USER_WITH_THIS_PHONE_NUMBER_ALREADY_EXIST',
       statusCode: 4000
     },
+    USER_EXIST: {
+      data: 'USER_EXIST',
+      statusCode: 4005
+    },
     USER_NOT_FOUND: {
       data: 'USER_NOT_FOUND',
       statusCode: 4010
