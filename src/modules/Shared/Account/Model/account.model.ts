@@ -62,8 +62,7 @@ const accountSchema = new Schema<IAccount, AccountModel, IAccountMethods>(
       type: Date
     },
     uniqueId: {
-      type: String,
-      required: true
+      type: String
     },
     job: {
       type: String
