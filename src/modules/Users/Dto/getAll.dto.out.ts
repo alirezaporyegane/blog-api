@@ -1,5 +1,5 @@
 export type GetAllDtoOut = {
-  id: string
+  _id: string
   userName: string
   firstName: string
   lastName: string
