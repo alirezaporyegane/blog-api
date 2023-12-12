@@ -14,7 +14,7 @@ export type GetAllDtoIn = {
   skip: string
   limit: string
   sortColumn: string
-  sortType: 'ascending' | 'descending'
+  sortType: 'asc' | 'desc'
   id: string
   userName: string
   firstName: string
