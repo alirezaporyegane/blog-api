@@ -46,7 +46,7 @@ export const getAll = async (
     queryBuilder.boolean('phoneNumberConfirmed', req.query.phoneNumberConfirmed)
     queryBuilder.boolean('confirmedProfile', req.query.confirmedProfile)
     queryBuilder.boolean('suspended', req.query.suspended)
-    console.log(queryBuilder.getFilters)
+
     const Account = AccountModel.find<GetAllDtoOut>(queryBuilder.getFilters).select([
       '_id',
       'userName',
@@ -63,8 +63,9 @@ export const getAll = async (
       'nationalId',
       'status'
     ])
-    if (req.query.skip) Account.skip(+req.query.skip)
-    if (req.query.limit) Account.limit(+req.query.limit)
+    const size = req.query.size ? +req.query.size : 10
+    if (req.query.page) Account.skip((+req.query.page - 1) * size)
+    if (req.query.size) Account.limit(size)
     if (req.query.sortColumn && req.query.sortType)
       Account.sort({ [req.query.sortColumn]: req.query.sortType })
 

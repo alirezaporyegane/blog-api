@@ -11,8 +11,8 @@ export type Filters = {
 }
 
 export type GetAllDtoIn = {
-  skip: string
-  limit: string
+  page: string
+  size: string
   sortColumn: string
   sortType: 'asc' | 'desc'
   id: string
