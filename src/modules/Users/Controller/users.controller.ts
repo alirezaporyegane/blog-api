@@ -47,7 +47,10 @@ export const getAll = async (
     queryBuilder.boolean('confirmedProfile', req.query.confirmedProfile)
     queryBuilder.boolean('suspended', req.query.suspended)
 
-    const Account = AccountModel.find<GetAllDtoOut>(queryBuilder.getFilters).select([
+    const Account = AccountModel.find<GetAllDtoOut>({
+      ...queryBuilder.getFilters,
+      _id: { $nin: req.user._id }
+    }).select([
       '_id',
       'userName',
       'firstName',
