@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { authorization, roleChecker } from '../../../middleware/Auth'
 import { Role } from '../../Shared/Account/Entity/account.entity'
-import { create, getAll, getById, getCount, remove, update } from '../Controller/users.controller'
+import { create, getAll, getById, getCount, remove, update, updatePasswordById } from '../Controller/users.controller'
 
 const router = Router()
 
@@ -36,6 +36,12 @@ router.post('/', create)
  * @method (PUT) /api/admin/users/:id
  */
 router.put('/:id', update)
+
+/**
+ * UPDATE MODEL BY ID
+ * @method (PUT) /api/admin/users/:id/password
+ */
+router.put('/:id/password', updatePasswordById)
 
 /**
  * DELETE MODEL BY ID
