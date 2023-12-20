@@ -45,6 +45,8 @@ export const getAll = async (
     queryBuilder.regex('lastName', req.query.lastName)
     queryBuilder.regex('phoneNumber', req.query.phoneNumber)
     queryBuilder.regex('email', req.query.email)
+    queryBuilder.regex('job', req.query.job)
+    queryBuilder.regex('nationalId', req.query.nationalId)
     queryBuilder.boolean('confirmEmail', req.query.confirmEmail)
     queryBuilder.boolean('confirmPhoneNumber', req.query.confirmPhoneNumber)
     queryBuilder.boolean('confirmedProfile', req.query.confirmedProfile)

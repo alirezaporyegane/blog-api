@@ -4,6 +4,8 @@ export type Filters = {
   firstName: { $regex: string } | null
   lastName: { $regex: string } | null
   email: { $regex: string } | null
+  job: { $regex: string } | null
+  nationalId: { $regex: string } | null
   phoneNumber: { $regex: string } | null
   confirmEmail: boolean
   confirmPhoneNumber: boolean
@@ -20,6 +22,8 @@ export type GetAllDtoIn = {
   firstName: string
   lastName: string
   email: string
+  job: string
+  nationalId: string
   phoneNumber: string
   confirmEmail: boolean
   confirmedProfile: boolean
