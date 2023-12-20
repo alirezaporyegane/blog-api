@@ -41,7 +41,7 @@ export const updateProfileValidator = (data: IAccountProfile) => {
     birthDate: joi.allow(null).allow(''),
     job: joi.allow(null).allow(''),
     nationalId: joi.allow(null).allow(''),
-    gender: joi.number().integer().valid('MALE').valid('FEMALE').allow(null).allow('')
+    gender: joi.string().valid('MALE').valid('FEMALE').allow(null).allow('')
   })
 
   return schema.validate(data)
