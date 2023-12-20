@@ -5,8 +5,8 @@ export type Filters = {
   lastName: { $regex: string } | null
   email: { $regex: string } | null
   phoneNumber: { $regex: string } | null
-  emailConfirmed: boolean
-  phoneNumberConfirmed: boolean
+  confirmEmail: boolean
+  confirmPhoneNumber: boolean
   suspended: boolean
 }
 
@@ -21,8 +21,8 @@ export type GetAllDtoIn = {
   lastName: string
   email: string
   phoneNumber: string
-  emailConfirmed: boolean
+  confirmEmail: boolean
   confirmedProfile: boolean
-  phoneNumberConfirmed: boolean
+  confirmPhoneNumber: boolean
   suspended: boolean
 }

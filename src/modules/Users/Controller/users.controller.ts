@@ -10,7 +10,6 @@ import {
 } from '../../../middleware/ErrorMessage'
 import StatusCodes from '../../../middleware/StatusCodes'
 import { QueryBuilder } from '../../../utils/queryBuilder'
-import { Role } from '../../Shared/Account/Entity/account.entity'
 import AccountModel from '../../Shared/Account/Model/account.model'
 import {
   CreateDtoIn,
@@ -22,7 +21,11 @@ import {
   UpdateDtoIn,
   UpdateDtoOut
 } from '../Dto'
-import { userValidator } from '../Validator/users.validator'
+import {
+  userUpdatePasswordValidator,
+  userUpdateValidator,
+  userValidator
+} from '../Validator/users.validator'
 
 /**
  * GET ALL MODEL
@@ -42,8 +45,8 @@ export const getAll = async (
     queryBuilder.regex('lastName', req.query.lastName)
     queryBuilder.regex('phoneNumber', req.query.phoneNumber)
     queryBuilder.regex('email', req.query.email)
-    queryBuilder.boolean('emailConfirmed', req.query.emailConfirmed)
-    queryBuilder.boolean('phoneNumberConfirmed', req.query.phoneNumberConfirmed)
+    queryBuilder.boolean('confirmEmail', req.query.confirmEmail)
+    queryBuilder.boolean('confirmPhoneNumber', req.query.confirmPhoneNumber)
     queryBuilder.boolean('confirmedProfile', req.query.confirmedProfile)
     queryBuilder.boolean('suspended', req.query.suspended)
 
@@ -57,8 +60,8 @@ export const getAll = async (
       'lastName',
       'phoneNumber',
       'email',
-      'emailConfirmed',
-      'phoneNumberConfirmed',
+      'confirmEmail',
+      'confirmPhoneNumber',
       'confirmedProfile',
       'suspended',
       'birthDate',
@@ -95,12 +98,15 @@ export const getCount = async (req: Request<{}, {}, {}, GetAllDtoIn>, res: Respo
     queryBuilder.regex('lastName', req.query.lastName)
     queryBuilder.regex('phoneNumber', req.query.phoneNumber)
     queryBuilder.regex('email', req.query.email)
-    queryBuilder.boolean('emailConfirmed', req.query.emailConfirmed)
-    queryBuilder.boolean('phoneNumberConfirmed', req.query.phoneNumberConfirmed)
+    queryBuilder.boolean('confirmEmail', req.query.confirmEmail)
+    queryBuilder.boolean('confirmPhoneNumber', req.query.confirmPhoneNumber)
     queryBuilder.boolean('confirmedProfile', req.query.confirmedProfile)
     queryBuilder.boolean('suspended', req.query.suspended)
 
-    const count = await AccountModel.find<number>(queryBuilder.getFilters).countDocuments()
+    const count = await AccountModel.find<number>({
+      ...queryBuilder.getFilters,
+      _id: { $nin: req.user._id }
+    }).countDocuments()
 
     res.status(200).json(count)
   } catch (err) {
@@ -129,11 +135,14 @@ export const getById = async (
       'lastName',
       'email',
       'phoneNumber',
-      'emailConfirmed',
+      'confirmEmail',
       'confirmedProfile',
-      'phoneNumberConfirmed',
+      'confirmPhoneNumber',
       'birthDate',
       'job',
+      'role',
+      'gender',
+      'legality',
       'nationalId',
       'suspended'
     ])
@@ -158,12 +167,15 @@ export const create = async (
       'lastName',
       'email',
       'phoneNumber',
-      'emailConfirmed',
+      'confirmEmail',
       'confirmedProfile',
       'password',
       'confirmPassword',
-      'phoneNumberConfirmed',
+      'confirmPhoneNumber',
       'birthDate',
+      'legality',
+      'gender',
+      'role',
       'job',
       'nationalId',
       'suspended'
@@ -178,7 +190,6 @@ export const create = async (
     if (!!isUserExist) return errorStatus409(res, StatusCodes.account.USER_EXIST)
 
     body.password = await hash(req.body.password, 12)
-    body.role = [Role.USER]
     const { confirmPassword, ...rest } = body
 
     await AccountModel.create<Partial<CreateDtoIn>>(rest)
@@ -188,16 +199,50 @@ export const create = async (
       'lastName',
       'email',
       'phoneNumber',
-      'emailConfirmed',
+      'confirmEmail',
       'confirmedProfile',
-      'phoneNumberConfirmed',
+      'confirmPhoneNumber',
       'birthDate',
+      'legality',
       'job',
+      'gender',
       'nationalId',
       'suspended'
     ])
 
     res.status(200).json(response)
+  } catch (err) {
+    errorStatus500(res, err)
+  }
+}
+
+/**
+ * UPDATE MODEL BY ID
+ * @method (PUT) /api/admin/users/:id/password
+ */
+export const updatePasswordById = async (
+  req: Request<{ id: string }, { newPassword: string; confirmNewPassword: string }>,
+  res: Response<unknown>
+) => {
+  try {
+    const id = req.params.id
+    if (!isValidObjectId(id)) return errorStatusObjectId(res)
+
+    const body = pick<{ newPassword: string; confirmNewPassword: string }>(req.body, [
+      'newPassword',
+      'confirmNewPassword'
+    ])
+
+    const { error } = userUpdatePasswordValidator(body)
+    if (error) return errorStatus400(res, error)
+
+    const user = await AccountModel.findById(id)
+    if (!user) return errorStatus409(res, StatusCodes.account.USER_NOT_FOUND)
+
+    user.password = await hash(req.body.newPassword, 12)
+    await user.save()
+
+    res.status(200).json('success')
   } catch (err) {
     errorStatus500(res, err)
   }
@@ -221,18 +266,19 @@ export const update = async (
       'lastName',
       'email',
       'phoneNumber',
-      'emailConfirmed',
+      'confirmEmail',
       'confirmedProfile',
-      'password',
-      'confirmPassword',
-      'phoneNumberConfirmed',
+      'confirmPhoneNumber',
+      'legality',
+      'role',
+      'gender',
       'birthDate',
       'job',
       'nationalId',
       'suspended'
     ])
 
-    const { error } = userValidator(body)
+    const { error } = userUpdateValidator(body)
     if (error) return errorStatus400(res, error)
 
     const isUserExist = await AccountModel.findOne({
@@ -241,21 +287,18 @@ export const update = async (
     })
     if (!!isUserExist) return errorStatus409(res, StatusCodes.account.USER_EXIST)
 
-    body.password = await hash(req.body.password, 12)
-    body.role = [Role.USER]
-    const { confirmPassword, ...rest } = body
-
-    await AccountModel.findByIdAndUpdate<Partial<UpdateDtoIn>>(id, rest)
+    await AccountModel.findByIdAndUpdate<Partial<UpdateDtoIn>>(id, body)
     const response = pick(body, [
       'userName',
       'firstName',
       'lastName',
       'email',
       'phoneNumber',
-      'emailConfirmed',
+      'confirmEmail',
       'confirmedProfile',
-      'phoneNumberConfirmed',
+      'confirmPhoneNumber',
       'birthDate',
+      'legality',
       'job',
       'nationalId',
       'suspended'

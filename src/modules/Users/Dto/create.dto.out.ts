@@ -4,9 +4,9 @@ export type CreateDtoOut = {
   lastName: string
   email: string
   phoneNumber: string
-  emailConfirmed: boolean
+  confirmEmail: boolean
   confirmedProfile: boolean
-  phoneNumberConfirmed: boolean
+  confirmPhoneNumber: boolean
   suspended: boolean
   job: string
   birthDate: string

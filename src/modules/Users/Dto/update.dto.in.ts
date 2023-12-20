@@ -4,14 +4,13 @@ export type UpdateDtoIn = {
   lastName: string
   email: string
   phoneNumber: string
-  emailConfirmed: boolean
+  confirmEmail: boolean
   confirmedProfile: boolean
-  password: string
-  confirmPassword: string
   job: string
+  gender: string
   birthDate: string
   nationalId: string
-  phoneNumberConfirmed: boolean
+  confirmPhoneNumber: boolean
   suspended: boolean
   role: string[]
 }

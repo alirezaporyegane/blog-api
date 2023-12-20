@@ -5,9 +5,9 @@ export type GetAllDtoOut = {
   lastName: string
   email: string
   phoneNumber: string
-  emailConfirmed: boolean
+  confirmEmail: boolean
   confirmedProfile: boolean
-  phoneNumberConfirmed: boolean
+  confirmPhoneNumber: boolean
   suspended: boolean
   birthDate: string
   nationalId: string
