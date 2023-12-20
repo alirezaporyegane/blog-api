@@ -24,7 +24,7 @@ export class QueryBuilder {
   }
 
   objectId(type: keyof typeof this.filter, query: any) {
-    if (type && query && typeof query === 'string' && isValidObjectId(query))
+    if (type && query && typeof query === 'string' && isValidObjectId(new Types.ObjectId(query)))
       this.filter[type] = new Types.ObjectId(query)
   }
 
