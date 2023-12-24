@@ -24,6 +24,7 @@ export const getAll = async (req: Request, res: Response) => {
       '_id',
       'name',
       'altName',
+      'active',
       'slug',
       'parentId',
       'sortOrder'
