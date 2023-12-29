@@ -8,7 +8,7 @@ const router = Router()
 
 /**
  * CREATE
- * @method (GET) /api/shared/files
+ * @method (POST) /api/shared/files
  */
 router.post('/', upload.array('image', 20), create)
 

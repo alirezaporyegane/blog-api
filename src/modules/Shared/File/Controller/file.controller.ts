@@ -8,7 +8,7 @@ import { filesValidator } from '../Validator/file.validator'
 
 /**
  * CREATE
- * @method (GET) /api/shared/files
+ * @method (POST) /api/shared/files
  */
 export const create = async (req: Request, res: Response) => {
   try {
