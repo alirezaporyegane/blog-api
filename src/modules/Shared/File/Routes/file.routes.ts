@@ -14,8 +14,8 @@ router.post('/', upload.array('image', 20), create)
 
 /**
  * DELETE BY FILE NAME
- * @method (DELETE) /api/shared/files/:filename
+ * @method (DELETE) /api/shared/files
  */
-router.delete('/:filename', remove)
+router.delete('/', remove)
 
 export default router

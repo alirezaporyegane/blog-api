@@ -13,6 +13,7 @@ export type PostsType = {
   metaDescription: string
   active: boolean
   categoryId: Schema.Types.ObjectId
+  userId: string
   publish: Date
   createdAt: Date
   updatedAt: Date

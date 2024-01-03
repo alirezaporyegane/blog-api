@@ -53,6 +53,10 @@ const postSchema = new Schema<PostsType, PostModel>({
   categoryId: {
     type: Object,
     ref: 'PostCategory'
+  },
+  userId: {
+    type: String,
+    required: true
   }
 }, { timestamps: true, versionKey: false })
 

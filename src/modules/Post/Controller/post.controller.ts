@@ -7,6 +7,9 @@ import {
   errorStatusObjectId
 } from '../../../middleware/ErrorMessage'
 import { QueryBuilder } from '../../../utils/queryBuilder'
+import { PostCategoryDto } from '../../PostCategory/Dto/postCategory.dto'
+import PostCategoryModel from '../../PostCategory/Model/index'
+import { Role } from '../../Shared/Account/Entity/account.entity'
 import {
   CreatePostsDto,
   DeletePostDto,
@@ -54,13 +57,17 @@ export const getAll = async (
       'slug',
       'active',
       'createdAt',
-      'publish',
+      'publish'
     ])
     const size = req.query.size ? +req.query.size : 10
     if (req.query.page) posts.skip((+req.query.page - 1) * size)
     if (req.query.size) posts.limit(size)
     if (req.query.sortColumn && req.query.sortType)
       posts.sort({ [req.query.sortColumn]: req.query.sortType })
+
+    if (req.user && req.user.role.includes(Role.WRITER)) {
+      posts.where('userId').equals(req.user._id)
+    }
 
     const items = await posts
 
@@ -111,7 +118,7 @@ export const getById = async (
     if (!isValidObjectId(id)) return errorStatusObjectId(res)
 
     const item = await PostModel.findById<GetByIdPostsDto>(id)
-    const response = pick<GetByIdPostsDto>(item, [
+    let response = pick<GetByIdPostsDto>(item, [
       '_id',
       'name',
       'slug',
@@ -126,6 +133,14 @@ export const getById = async (
       'categoryId',
       'publish'
     ])
+
+    if (response.categoryId) {
+      const category = await PostCategoryModel.findById<Pick<PostCategoryDto, '_id' | 'name'>>(
+        response.categoryId
+      ).select(['_id', 'name'])
+
+      response.category = { value: category?._id || '', text: category?.name || '' }
+    }
 
     res.status(200).json(response)
   } catch (err) {
@@ -158,6 +173,7 @@ export const create = async (
     ])
     const { error } = createValidator(body)
     if (error) errorStatus400(res, error)
+    body.userId = req.user._id
 
     await PostModel.create(body)
 

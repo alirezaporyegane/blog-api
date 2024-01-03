@@ -1,6 +1,7 @@
-import { Response, Request } from 'express'
+import { Request, Response } from 'express'
+import { existsSync, unlinkSync } from 'fs'
 import { errorStatus400, errorStatus500 } from '../../../../middleware/ErrorMessage'
-import { CreateFileEntity } from '../Entity'
+import { CreateFileEntity, DeleteFileEntity } from '../Entity'
 import FileModel from '../Model/file.model'
 import { filesValidator } from '../Validator/file.validator'
 
@@ -35,11 +36,11 @@ export const create = async (req: Request, res: Response) => {
  * DELETE BY FILE NAME
  * @method (DELETE) /api/shared/files/:filename
  */
-export const remove = async (req: Request, res: Response) => {
+export const remove = async (req: Request<{}, {}, {}, DeleteFileEntity>, res: Response) => {
   try {
-    const filename = req.params.filename
+    const filename = req.query.fileName
 
-    // fs.unlinkSync(`public/${filename}`)
+    if (existsSync(`public/${filename}`)) unlinkSync(`public/${filename}`)
 
     await FileModel.deleteOne({ images: filename })
 

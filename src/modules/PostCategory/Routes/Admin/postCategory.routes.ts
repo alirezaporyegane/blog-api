@@ -5,6 +5,7 @@ import {
   create,
   getAll,
   getById,
+  getInfo,
   remove,
   update,
   upsert
@@ -19,6 +20,13 @@ router.use([authorization, roleChecker([Role.ADMIN, Role.WRITER])])
  * @method (GET) /api/admin/post-categories
  */
 router.get('/', getAll)
+
+/**
+ * GET MODEL INFO
+ * @method (GET) /api/admin/post-categories/info
+ */
+router.get('/info', getInfo)
+
 
 /**
  * GET MODEL BY ID

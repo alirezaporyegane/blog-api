@@ -23,12 +23,10 @@ export const authorization = async (req: Request, res: Response, next: NextFunct
     if (!account) return errorStatus401(res, { ...statusCodes.account.USER_NOT_FOUNT })
     if (account.suspended) return errorStatus401(res, { ...statusCodes.account.USER_IS_SUSPENDED })
 
-    if (user.confirmPhoneNumber)
+    if (!user.confirmPhoneNumber)
       return errorStatus401(res, { ...statusCodes.account.YOUR_PHONE_NUMBER_IS_NOT_CONFIRM })
-
     next()
   } catch (err) {
-    console.log(err)
     errorStatus401(res, { ...statusCodes.account.TOKEN_IS_EXPIRED })
   }
 }

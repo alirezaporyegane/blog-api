@@ -7,5 +7,6 @@ export type FileType = {
 export type FileModel = Model<FileType, {}>
 
 import { CreateFileEntity } from './create.file.entity'
+import { DeleteFileEntity } from './delete.file.entity'
 
-export { CreateFileEntity }
+export { CreateFileEntity, DeleteFileEntity }

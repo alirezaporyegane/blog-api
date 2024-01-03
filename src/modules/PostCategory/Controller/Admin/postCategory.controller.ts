@@ -7,6 +7,7 @@ import {
   errorStatusObjectId
 } from '../../../../middleware/ErrorMessage'
 import { PostCategoryDto } from '../../Dto/postCategory.dto'
+import { GetInfoPostCategoryEntity } from '../../Entity/getInfo.postCatrgory.entity'
 import { PostCategoryEntity } from '../../Entity/postCategory.entity'
 import PostCategoryModel from '../../Model'
 import {
@@ -31,6 +32,49 @@ export const getAll = async (req: Request, res: Response) => {
     ])
 
     res.status(200).json(items)
+  } catch (err) {
+    errorStatus500(res, err)
+  }
+}
+
+/**
+ * GET MODEL INFO
+ * @method (GET) /api/admin/post-categories/info
+ */
+export const getInfo = async (
+  req: Request<{}, {}, {}, GetInfoPostCategoryEntity>,
+  res: Response
+) => {
+  try {
+    const filter = []
+    if (typeof req.query.keyword === 'object') {
+      const ids =
+        req.query?.keyword.length &&
+        req.query?.keyword?.map((id) => new mongoose.Types.ObjectId(id))
+      filter.push({ $match: { _id: { $in: ids } } })
+    } else if (req.query.keyword && mongoose.isValidObjectId(req.query.keyword)) {
+      filter.push({ $match: { _id: new mongoose.Types.ObjectId(req.query.keyword) } })
+    } else if (req.query.keyword) filter.push({ $match: { name: { $regex: req.query.keyword } } })
+
+    const size = req.query.size ? +req.query.size : 20
+    if (req.query.size) filter.push({ $limit: size })
+    if (req.query.page) filter.push({ $skip: (+req.query.page - 1) * size })
+
+    const items = await PostCategoryModel.aggregate([
+      { $sort: { name: 1 } },
+      ...filter,
+      {
+        $project: {
+          _id: 0,
+          text: '$name',
+          value: '$_id'
+        }
+      }
+    ])
+
+    const count = await PostCategoryModel.find().countDocuments()
+
+    res.status(200).json({ items, count })
   } catch (err) {
     errorStatus500(res, err)
   }
