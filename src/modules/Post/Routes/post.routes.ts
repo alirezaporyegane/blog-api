@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { authorization, roleChecker } from '../../../middleware/Auth'
 import { Role } from '../../Shared/Account/Entity/account.entity'
-import { create, getAll, getById, getCount, remove, update } from '../Controller/post.Controller'
+import { create, getAll, getById, getCount, remove, update } from '../Controller/post.controller'
 
 const router = Router()
 
