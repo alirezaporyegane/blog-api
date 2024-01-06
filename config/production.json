@@ -1,0 +1,9 @@
+{
+  "PORT": 4000,
+  "LOCALE": "en",
+  "HOST": "http://localhost:4000",
+  "SECRET_KEY": "hig%n+t0h2nxoxr@!jk5l(t3&7-y0%zvggv94ne8$pg$5a%$%v",
+  "MONGODB_PORT": "mongodb+srv://vercel-admin-user:13771377@cluster0.17lybce.mongodb.net/?retryWrites=true&w=majority",
+  "KAVENEGAR_API_KEY": "785141742B50564B342F356C4D6C617876514C34542F634C4564384D435850596F4A2F2F596E51766E546B3D",
+  "KAVENEGAR_SENDER": "1000596446"
+}
