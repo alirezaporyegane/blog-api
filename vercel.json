@@ -1,7 +1,11 @@
 {
-
-  "source": "/((?!api/.*).*)",
-  "destination": "/api",
+  "rewrites": [
+    {
+      "source": "/((?!api/.*).*)",
+      "destination": "/api"
+    }
+  ],
+  
   "buildCommand": "npm run build",
   "devCommand": "npm run start"
 }
