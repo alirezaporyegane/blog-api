@@ -3,10 +3,6 @@
     {
       "src": "./dist/app.js",
       "use": "@now/node"
-    },
-    {
-      "src": "./dist/public",
-      "use": "@vercel/static"
     }
   ],
   "routes": [
