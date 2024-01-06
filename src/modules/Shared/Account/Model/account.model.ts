@@ -103,7 +103,7 @@ accountSchema.methods.generateToken = function () {
     suspended: this.suspended
   }
 
-  return Jwt.sign(data, config.get('SECRET_KEY'))
+  return Jwt.sign(data, 'hig%n+t0h2nxoxr@!jk5l(t3&7-y0%zvggv94ne8$pg$5a%$%v')
 }
 
 accountSchema.methods.generateRefreshToken = function () {
@@ -121,7 +121,7 @@ accountSchema.methods.generateRefreshToken = function () {
     suspended: this.suspended
   }
 
-  return Jwt.sign(data, config.get('SECRET_KEY'))
+  return Jwt.sign(data, 'hig%n+t0h2nxoxr@!jk5l(t3&7-y0%zvggv94ne8$pg$5a%$%v')
 }
 
 export default mongoose.model('Account', accountSchema)

@@ -15,7 +15,7 @@ export const authorization = async (req: Request, res: Response, next: NextFunct
       return errorStatus401(res, { ...statusCodes.account.TOKEN_IS_NOT_VALID })
     if (!token) return errorStatus401(res, { ...statusCodes.account.TOKEN_IS_REQUIRED })
 
-    const user = jwt.verify(token, config.get('SECRET_KEY')) as IData
+    const user = jwt.verify(token, 'hig%n+t0h2nxoxr@!jk5l(t3&7-y0%zvggv94ne8$pg$5a%$%v') as IData
     req.user = user
 
     const account = await accountModel.findOne({ _id: user._id })
