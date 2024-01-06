@@ -1,11 +1,4 @@
 {
-
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/dist/index.js"
-    }
-  ],
   "rewrites": [
     {
       "source": "/api/(.*)",
