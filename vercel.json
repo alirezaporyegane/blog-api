@@ -14,7 +14,7 @@
   "builds": [
     {
       "source": "public/**",
-      "use": "@vercel/static"
+      "destination": "@vercel/static"
     }
   ],
   "buildCommand": "npm run build",
