@@ -3,6 +3,7 @@ node_modules
 package-lock.json
 error-log.log
 /public/*
+!/public/index.js
 /dist/*
 /coverage
 

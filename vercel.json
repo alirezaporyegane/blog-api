@@ -1,14 +1,14 @@
 {
-  "builds": [
+  "rewrites": [
     {
-      "src": "./dist/app.js",
-      "use": "@now/node"
+      "source": "/api/(.*)",
+      "destination": "/api"
+    },
+    {
+      "source": "/public/(.*)",
+      "destination": "/public"
     }
   ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "./dist/app.js"
-    }
-  ]
+  "buildCommand": "npm run build",
+  "devCommand": "npm run start"
 }
