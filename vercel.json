@@ -11,8 +11,8 @@
       "destination": "/api"
     },
     {
-      "src": "/(.+)",
-      "dest": "public/$1"
+      "source": "/(.+)",
+      "destination": "public/$1"
     }
   ],
   "buildCommand": "npm run build",
