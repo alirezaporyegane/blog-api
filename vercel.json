@@ -1,8 +1,18 @@
 {
-  "rewrites": [
+  "builds": [
     {
-      "source": "/api/(.*)",
-      "destination": "/api"
+      "src": "./dist/app.js",
+      "use": "@now/node"
+    },
+    {
+      "src": "./dist/public",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "./dist/app.js"
     }
   ],
   "buildCommand": "npm run build",
