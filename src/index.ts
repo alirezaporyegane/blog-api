@@ -31,7 +31,7 @@ export class App {
 
   async setupDb() {
     try {
-      await mongoose.connect('mongodb://127.0.0.1:27017/blog')
+      await mongoose.connect('mongodb+srv://vercel-admin-user:13771377@cluster0.17lybce.mongodb.net/?retryWrites=true&w=majority')
       console.log('Database is connected')
     } catch (err) {
       console.log('Db error')
