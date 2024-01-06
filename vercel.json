@@ -1,8 +1,10 @@
 {
-  "build": {
-    "src": "public/**",
-    "use": "@vercel/static"
-  },
+  "builds": [
+    {
+      "src": "public/**",
+      "use": "@vercel/static"
+    }
+  ],
   "rewrites": [
     {
       "source": "/api/(.*)",
