@@ -5,6 +5,12 @@
       "destination": "/api"
     }
   ],
+  "builds": [
+    {
+      "src": "/public",
+      "use": "@vercel/static"
+    }
+  ],
   "buildCommand": "npm run build",
   "devCommand": "npm run start"
 }
