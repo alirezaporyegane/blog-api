@@ -3,7 +3,7 @@ node_modules
 package-lock.json
 error-log.log
 /public
-/dist
+/dist/*
 /coverage
 
 /tests/e2e/reports/
