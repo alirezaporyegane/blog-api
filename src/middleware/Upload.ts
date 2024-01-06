@@ -3,6 +3,7 @@ import multer from 'multer'
 
 const storage = multer.diskStorage({
   destination: function (req, _, cb) {
+    console.log(fs.existsSync('public'));
     if (!fs.existsSync('public')) fs.mkdirSync('public')
 
     if (!fs.existsSync('public/temp')) fs.mkdirSync('public/temp')
