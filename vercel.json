@@ -1,5 +1,4 @@
 {
-
   "routes": [
     {
       "src": "/api/(.*)",
@@ -14,7 +13,7 @@
   ],
   "builds": [
     {
-      "src": "public/**",
+      "source": "public/**",
       "use": "@vercel/static"
     }
   ],
