@@ -5,6 +5,12 @@
       "use": "@vercel/static"
     }
   ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "index.js"
+    }
+  ],
   "rewrites": [
     {
       "source": "/api/(.*)",
