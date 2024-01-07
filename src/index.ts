@@ -46,7 +46,7 @@ export class App {
 
   setupMiddleware() {
     app.use((req: Request, res: Response, next: NextFunction) => {
-      res.header('Access-Control-Allow-Origin', 'http://localhost:8080, https://blog-admin-rouge.vercel.app, http://blog-admin-rouge.vercel.app')
+      res.header('Access-Control-Allow-Origin', '*')
       res.header('Access-Control-Allow-Headers', 'X-Requested-With,content-type')
       res.header('Access-Control-Allow-Credentials', 'true')
       if (req.method === 'OPTIONS') {
