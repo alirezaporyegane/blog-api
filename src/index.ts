@@ -31,7 +31,9 @@ export class App {
 
   async setupDb() {
     try {
-      await mongoose.connect('mongodb+srv://vercel-admin-user:13771377@cluster0.17lybce.mongodb.net/?retryWrites=true&w=majority')
+      await mongoose.connect(
+        'mongodb+srv://vercel-admin-user:13771377@cluster0.17lybce.mongodb.net/?retryWrites=true&w=majority'
+      )
       console.log('Database is connected')
     } catch (err) {
       console.log('Db error')
@@ -44,10 +46,11 @@ export class App {
 
   setupMiddleware() {
     app.use((req: Request, res: Response, next: NextFunction) => {
-      res.header('Access-Control-Allow-Origin', '*')
-      res.header('Access-Control-Allow-Headers', '*')
+      res.header('Access-Control-Allow-Origin', 'http://localhost:8080, https://blog-admin-rouge.vercel.app, http://blog-admin-rouge.vercel.app')
+      res.header('Access-Control-Allow-Headers', 'X-Requested-With,content-type')
+      res.header('Access-Control-Allow-Credentials', 'true')
       if (req.method === 'OPTIONS') {
-        res.header('Access-Control-Allow-Methods', '*')
+        res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE')
         return res.status(200).json()
       }
 
