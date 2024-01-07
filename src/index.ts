@@ -47,7 +47,7 @@ export class App {
   setupMiddleware() {
     app.use((req: Request, res: Response, next: NextFunction) => {
       res.header('Access-Control-Allow-Origin', '*')
-      res.header('Access-Control-Allow-Headers', '*')
+      res.header('Access-Control-Allow-Headers', 'accept, Content-Type, Authorization, Connection host origin referer User-Agent')
       if (req.method === 'OPTIONS') {
         res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, PATCH, OPTIONS')
         return res.status(200).json()
