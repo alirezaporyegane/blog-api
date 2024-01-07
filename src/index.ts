@@ -47,9 +47,9 @@ export class App {
   setupMiddleware() {
     app.use((req: Request, res: Response, next: NextFunction) => {
       res.header('Access-Control-Allow-Origin', '*')
-      res.header('Access-Control-Allow-Headers', 'X-Requested-With,content-type')
+      res.header('Access-Control-Allow-Headers', 'X-Requested-With, content-type')
       if (req.method === 'OPTIONS') {
-        res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE')
+        res.header('Access-Control-Allow-Methods', '*')
         return res.status(200).json()
       }
 
