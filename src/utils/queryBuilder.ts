@@ -1,4 +1,4 @@
-import { Types, isValidObjectId } from 'mongoose'
+import { Schema, Types, isValidObjectId } from 'mongoose'
 
 type Filter = {
   [key: string]: unknown
@@ -24,7 +24,7 @@ export class QueryBuilder {
   }
 
   objectId(type: keyof typeof this.filter, query: any) {
-    if (type && query && typeof query === 'string' && isValidObjectId(new Types.ObjectId(query)))
+    if (type && query && typeof query === 'string' && isValidObjectId(new Schema.ObjectId(query)))
       this.filter[type] = new Types.ObjectId(query)
   }
 

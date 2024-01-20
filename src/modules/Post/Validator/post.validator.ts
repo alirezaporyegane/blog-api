@@ -15,6 +15,7 @@ export const createValidator = (data: Partial<CreatePostsEntity>) => {
     metaDescription: joi.string().allow('').allow(null),
     categoryId: [objectId(joi), joi.string().required()],
     excerpt: joi.string().allow(null).allow(''),
+    readTime: joi.number().integer().required(),
     publish: joi.date().required()
   })
 
@@ -35,6 +36,7 @@ export const updateValidator = (data: Partial<UpdatePostsEntity>) => {
     metaDescription: joi.string().allow('').allow(null),
     categoryId: [objectId(joi), joi.string().required()],
     excerpt: joi.string().allow(null).allow(''),
+    readTime: joi.number().integer().required(),
     publish: joi.date().required()
   })
 

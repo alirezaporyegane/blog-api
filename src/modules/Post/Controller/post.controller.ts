@@ -131,7 +131,8 @@ export const getById = async (
       'metaDescription',
       'active',
       'categoryId',
-      'publish'
+      'publish',
+      'readTime'
     ])
 
     if (response.categoryId) {
@@ -169,11 +170,17 @@ export const create = async (
       'metaDescription',
       'active',
       'categoryId',
-      'publish'
+      'publish',
+      'readTime'
     ])
     const { error } = createValidator(body)
     if (error) errorStatus400(res, error)
+
     body.userId = req.user._id
+    body.like = 0
+    body.comments = 0
+    body.view = 0
+    body.rate = 0
 
     await PostModel.create(body)
 
@@ -207,7 +214,8 @@ export const update = async (
       'metaDescription',
       'active',
       'categoryId',
-      'publish'
+      'publish',
+      'readTime'
     ])
 
     const { error } = updateValidator(body)

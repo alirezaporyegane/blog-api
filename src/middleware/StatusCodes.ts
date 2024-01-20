@@ -44,5 +44,15 @@ export default {
       data: 'USER_NOT_HAVE_CURRENT_ROLE',
       statusCode: 4090
     }
+  },
+  postComment: {
+    POST_COMMENTS_NOT_FOUND: {
+      data: 'POST_COMMENTS_NOT_FOUND',
+      statusCode: 5010
+    },
+    USER_ID_IS_SAME_WITH_POST_COMMENT: {
+      data: 'USER_ID_IS_SAME_WITH_POST_COMMENT',
+      statusCode: 5020
+    }
   }
 }
